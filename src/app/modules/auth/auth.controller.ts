@@ -16,4 +16,19 @@ export const AuthController = {
       next(error);
     }
   },
+
+  //logout
+   logout: async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      // Clear the jwt cookie
+      res.clearCookie('jwt', {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'strict',
+      });
+      sendResponse(res, 200, 'Logout successful', null);
+    } catch (error) {
+      next(error);
+    }
+  },
 };
