@@ -3,6 +3,8 @@ import cors from 'cors';
 // import router from './app/routes';
 // import globalErrorHandler from './app/middlewares/globalErrorHandler';
 import cookieParser from 'cookie-parser';
+import globalErrorHandler from './app/middlewares/globalErrorHandlers';
+import { AppRoutes } from './app/routes';
 
 const app: Application = express();
 
@@ -13,16 +15,17 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 // Routes
-// app.use('/api/v1', router);
+app.use('/api/v1', AppRoutes);
 
 // Routes
-app.get("/", async (req: Request, res: Response) => {
+app.get('/', (_req: Request, res: Response) => {
   res.status(200).json({
-    message: "Hello from floor 6th",
+    success: true,
+    message: 'Ride Booking API is running!',
   });
 });
 
 // Global Error Handler
-// app.use(globalErrorHandler);
+app.use(globalErrorHandler);
 
 export default app;
