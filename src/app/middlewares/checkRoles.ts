@@ -1,12 +1,15 @@
-import { Request, Response, NextFunction } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import AppError from './AppError';
 
 
+interface AuthRequest{
+  user?: { id: string; role: string };
+}
+
 export const checkRole = (roles: string[]) => {
-  return (req: Request,res: Response, next: NextFunction) => {
-    const userRole = req.user?.role;
-    if (!userRole || !roles.includes(userRole)) {
-      throw new AppError(403, 'Forbidden: Insufficient permissions');
+  return (req: AuthRequest, res: Response, next: NextFunction) => {
+    if (!req.user || !roles.includes(req.user.role)) {
+      throw new AppError(403,'Access denied: insufficient permissions');
     }
     next();
   };

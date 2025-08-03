@@ -1,0 +1,48 @@
+import { Router } from 'express';
+import { DriverController } from './driver.controller';
+import { auth } from '../../middlewares/auth';
+
+import { validateRequest } from '../../middlewares/validateRequest';
+import { driverValidationSchema, updateDriverValidationSchema } from './driver.validation';
+import { checkRole } from '../../middlewares/checkRoles';
+
+export const DriverRoutes = Router();
+
+DriverRoutes.post(
+  '/',
+  auth(),
+  checkRole(['admin', 'driver']),
+  validateRequest(driverValidationSchema),
+  DriverController.createDriver,
+);
+
+DriverRoutes.patch(
+  '/approve/:id',
+  auth(),
+  checkRole(['admin']),
+  DriverController.approveDriver,
+);
+
+DriverRoutes.patch(
+  '/availability/:id',
+  auth(),
+  checkRole(['driver']),
+  validateRequest(updateDriverValidationSchema),
+  DriverController.setDriverAvailability,
+);
+
+DriverRoutes.get(
+  '/available',
+  auth(),
+  checkRole(['admin', 'rider']),
+  DriverController.getAvailableDrivers,
+);
+
+DriverRoutes.get(
+  '/earnings',
+  auth(),
+  checkRole(['driver']),
+  DriverController.getEarnings,
+);
+
+export default DriverRoutes;
