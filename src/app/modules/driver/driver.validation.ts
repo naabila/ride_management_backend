@@ -18,3 +18,10 @@ export const updateDriverValidationSchema = z.object({
     isOnline: z.boolean().optional(),
   }),
 });
+
+//Suspend Driver Validation Schema
+export const suspendDriverValidationSchema = z.object({
+  body: z.object({
+    reason: z.string().min(1, 'Suspension reason is required').max(500, 'Reason must be less than 500 characters'),
+  }),
+});

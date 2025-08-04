@@ -14,6 +14,23 @@ export const DriverController = {
     sendResponse(res, 200, 'Driver approved successfully', driver);
      }),
 
+   //Suspend Driver Controller
+  suspendDriver: catchAsyncHandler(async (req: any, res: Response) => {
+    const { reason } = req.body;
+    const driver = await DriverService.suspendDriver(
+      req.params.id, 
+      req.user.userId, 
+      reason
+    );
+    sendResponse(res, 200, 'Driver suspended successfully', driver);
+  }),
+
+  //Unsuspend Driver Controller
+  unsuspendDriver: catchAsyncHandler(async (req: Request, res: Response) => {
+    const driver = await DriverService.unsuspendDriver(req.params.id);
+    sendResponse(res, 200, 'Driver unsuspended successfully', driver);
+  }),   
+
   setDriverAvailability: catchAsyncHandler(async (req: Request, res: Response) => {
     const driver = await DriverService.updateDriver(req.params.id, { isOnline: req.body.isOnline });
     sendResponse(res, 200, 'Driver availability updated', driver);

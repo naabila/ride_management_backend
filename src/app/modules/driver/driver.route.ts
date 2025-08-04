@@ -3,7 +3,7 @@ import { DriverController } from './driver.controller';
 import { auth } from '../../middlewares/auth';
 
 import { validateRequest } from '../../middlewares/validateRequest';
-import { driverValidationSchema, updateDriverValidationSchema } from './driver.validation';
+import { driverValidationSchema, suspendDriverValidationSchema, updateDriverValidationSchema } from './driver.validation';
 import { checkRole } from '../../middlewares/checkRoles';
 
 export const DriverRoutes = Router();
@@ -30,7 +30,22 @@ DriverRoutes.patch(
   validateRequest(updateDriverValidationSchema),
   DriverController.setDriverAvailability,
 );
+//Suspend Driver Route
+DriverRoutes.patch(
+  '/suspend/:id',
+  auth(),
+  checkRole(['admin']),
+  validateRequest(suspendDriverValidationSchema),
+  DriverController.suspendDriver,
+);
 
+//Unsuspend Driver Route
+DriverRoutes.patch(
+  '/unsuspend/:id',
+  auth(),
+  checkRole(['admin']),
+  DriverController.unsuspendDriver,
+);
 DriverRoutes.get(
   '/available',
   auth(),
