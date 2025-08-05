@@ -9,7 +9,7 @@ import { checkRole } from '../../middlewares/checkRoles';
 export const DriverRoutes = Router();
 
 DriverRoutes.post(
-  '/',
+  '/createDriver',
   auth(),
   checkRole(['admin', 'driver']),
   validateRequest(driverValidationSchema),
