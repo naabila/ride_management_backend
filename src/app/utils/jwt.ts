@@ -3,7 +3,7 @@ import { envVars } from '../config/env';
 
 
 export const generateToken = (payload: { userId: string; role: string }) => {
-  return jwt.sign(payload, envVars.JWT_SECRET, { expiresIn: envVars.JWT_EXPIRES_IN });
+  return jwt.sign(payload, envVars.JWT_SECRET, { expiresIn: envVars.JWT_EXPIRES_IN  } as jwt.SignOptions);
 };
 
 export const verifyToken = (token: string) => {

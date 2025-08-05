@@ -7,10 +7,7 @@ let server: Server;
 
 const startServer = async () => {
   try {
-    await mongoose.connect(envVars.MONGO_URI, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    });
+    await mongoose.connect(envVars.MONGO_URI);
     console.log("✅ MongoDB connected");
 
     server = app.listen(envVars.PORT, () => {

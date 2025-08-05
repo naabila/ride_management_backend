@@ -1,38 +1,29 @@
 import { Request, Response, NextFunction } from 'express';
 import { verifyToken } from '../utils/jwt';
-import AppError from './AppError';
 
-
-// Add interface for decoded token
-interface DecodedToken {
+// Define the expected user structure
+export interface DecodedToken {
+  userId: string;
   role: string;
- }
-
-declare global {
-  namespace Express {
-    interface Request {
-      user: DecodedToken;
-    }
-  }
 }
-export const auth = (requiredRole?: string) => {
-  return async (req: Request, res: Response, next: NextFunction) => {
+
+// Extend Express Request type
+interface AuthRequest extends Request {
+  user?: DecodedToken;
+}
+
+export const auth = () => {
+  return async (req: AuthRequest, res: Response, next: NextFunction) => {
     try {
       const token = req.headers.authorization?.split(' ')[1];
       if (!token) {
-        throw new AppError(401,'Unauthorized: No token provided');
+        throw new Error('No token provided');
       }
-
       const decoded = verifyToken(token);
-      req.user = decoded;
-
-      if (requiredRole && decoded.role !== requiredRole && decoded.role !== 'admin') {
-        throw new AppError(403,'Forbidden: Insufficient role permissions');
-      }
-
+      req.user = decoded; 
       next();
     } catch (error) {
-      next(error);
+      res.status(401).json({ message: 'Unauthorized' });
     }
   };
 };
